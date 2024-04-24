@@ -13,14 +13,11 @@ return new class extends Migration
     {
         Schema::create("customers", function (Blueprint $table) {
             $table->id()->primary();
-            $table->string('username');
             $table->string('first');
             $table->string('last');
             $table->integer('phone')->unique();
-            //username
-            //first
-            //last
-            //phone
+            $table->timestamps();
+
 
     });
 }

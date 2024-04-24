@@ -21,18 +21,32 @@ class UserController extends Controller
     public function store(Request $request)
     {
 
+        $request->validate([
+            'first'=>'required|string|max:50',
+            'last'=>'required|string|max:50',
+            'phone'=>'required|unique|integer|max:11',
+        ]);
 
-        $user = Customer::create($request->all());
-        $user->store([
+        $user = Customer::create(
+        [
+
             "first"=> $request->first,
             "last"=> $request->last,
             "phone"=> $request->phone,
-        ]);
-        // $username = $request?->username;
-        // $first = $request?->first;
-        // $last = $request?->input('last');
-        // $phone = $request?->input('phone');     
+        ]
+        );
 
+        if(!$user) {
+            return response()->json([
+                "type"=> "Error",
+                "message" => "Failed",
+            ],500);
+        }
+
+        return response()->json([
+            "type"=> "Success",
+            "message" => "User Created Successfully",
+        ],200);
     }
 
 

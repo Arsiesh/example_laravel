@@ -14,5 +14,13 @@ Route::get('/sample', function () {
 });
 
 use Illuminate\Http\Request;
- 
-Route::get('/', [UserController::class, 'store']);
+
+Route::group(['prefix'=>'customers'], function(){
+    Route::post('/create-new', [UserController::class, 'store']);
+    Route::put('/update', [UserController::class, 'update']);
+    Route::delete('/delete', [UserController::class, 'delete']);
+    Route::get('/show-id', [UserController::class, 'show']);
+    Route::get('/show-all', [UserController::class, 'showall']);
+});
+
+
