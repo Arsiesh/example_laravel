@@ -27,6 +27,8 @@ class UserController extends Controller
             'phone'=>'required|unique|integer|max:11',
         ]);
 
+        
+
         $user = Customer::create(
         [
 
