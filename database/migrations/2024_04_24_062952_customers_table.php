@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id()->primary();
             $table->string('first');
             $table->string('last');
-            $table->integer('phone')->unique();
+            $table->string('phone')->unique();
             $table->timestamps();
 
 

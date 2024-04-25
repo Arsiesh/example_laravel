@@ -24,11 +24,10 @@ class UserController extends Controller
         $request->validate([
             'first'=>'required|string|max:50',
             'last'=>'required|string|max:50',
-            'phone'=>'required|unique|integer|max:11',
+            'phone'=>'required|unique:posts|integer|max:11',
         ]);
 
-        
-
+    
         $user = Customer::create(
         [
 
@@ -44,7 +43,6 @@ class UserController extends Controller
                 "message" => "Failed",
             ],500);
         }
-
         return response()->json([
             "type"=> "Success",
             "message" => "User Created Successfully",
@@ -62,20 +60,17 @@ class UserController extends Controller
             "phone"=> $request->phone,
         ]);
 
-        // $user->username = $request->input('username', $user->username);
-        // $user->first = $request->input('first', $user->first);
-        // $user->last = $request->input('last', $user->last);
-        // $user->phone = $request->input('phone', $user->phone);
-
         $user->save();
     }
 
-    public function destroy($id){
+    public function destroy(Request $request){
+        $id = $request->input("id");
         $user = Customer::findOrFail($id);
         $user->delete();
     }
 
-    public function show($id){
+    public function show(Request $request){
+        $id = $request->input("id");
         $user = Customer::findOrFail($id);
         return response()->json($user);
     }
