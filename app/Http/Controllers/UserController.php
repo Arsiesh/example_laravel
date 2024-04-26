@@ -21,19 +21,18 @@ class UserController extends Controller
     public function store(Request $request)
     {
 
-        $request->validate([
-            'first'=>'required|string|max:50',
-            'last'=>'required|string|max:50',
-            'phone'=>'required|unique:posts|integer|max:11',
-        ]);
+        // $request->validate([
+        //     'first'=>'required|string|max:50',
+        //     'last'=>'required|string|max:50',
+        //     'phone'=>'required|unique:posts|string|max:11',
+        // ]);
 
     
         $user = Customer::create(
         [
-
-            "first"=> $request->first,
-            "last"=> $request->last,
-            "phone"=> $request->phone,
+            "first"=> $request->input("first"),
+            "last"=> $request->input("last"),
+            "phone"=> $request->input("phone"),
         ]
         );
 
