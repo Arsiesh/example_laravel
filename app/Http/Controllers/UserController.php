@@ -25,14 +25,7 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $validation = $this->validateCustomer($request, 'customer');
-
-        if ($validation->fails()) {
-            return response()->json([
-                "type" => "Error",
-                "message" => "Validation failed",
-                "errors" => $validation->errors(),
-            ], 422);
-        }
+        $this->validationCheck($validation);
 
         // Proceed with creating the user
         $user = Customer::create([
@@ -47,7 +40,6 @@ class UserController extends Controller
                 "message" => "Failed to create user",
             ], 500);
         }
-
         return response()->json([
             "type" => "Success",
             "message" => "User Created Successfully",
@@ -60,15 +52,7 @@ class UserController extends Controller
         $id = $request->input("id");
         $validation = $this->validateCustomer($request, 'updates');
         $user = Customer::findOrFail($id);
-
-
-        if ($validation->fails()) {
-            return response()->json([
-                "type" => "Error",
-                "message" => "Validation failed",
-                "errors" => $validation->errors(),
-            ], 422);
-        }
+        $this->validationCheck($validation);
 
         $user->update([
             "first" => $request->input("first"),
@@ -93,14 +77,7 @@ class UserController extends Controller
 
     public function destroy(Request $request){
         $validation = $this->validateCustomer($request, 'id');
-
-        if ($validation->fails()) {
-            return response()->json([
-                "type" => "Error",
-                "message" => "Validation failed",
-                "errors" => $validation->errors(),
-            ], 422);
-        }
+        $this->validationCheck($validation);
 
         $id = $request->input("id");
         $user = Customer::findOrFail($id);
@@ -113,16 +90,9 @@ class UserController extends Controller
 
     public function show(Request $request){
         $id = $request->input("id");
-
         $validation = $this->validateCustomer($request, 'id');
+        $this->validationCheck($validation);
 
-        if ($validation->fails()) {
-            return response()->json([
-                "type" => "Error",
-                "message" => "Validation failed",
-                "errors" => $validation->errors(),
-            ], 422);
-        }
         $user = Customer::findOrFail($id);
         return response()->json($user);
     }
@@ -133,33 +103,35 @@ class UserController extends Controller
     }
     private function validateCustomer(Request $request, $type)
     {
-        $getCustomer = Validator::make($request->all(), [
-            'first' => 'required|max:50',
-            'last' => 'required|max:50',
-            'phone' => 'required|unique:customers|max:11',
-        ]);
-
-        $getID = Validator::make($request->all(), [
-            'id' => 'required|integer',
-        ]);
-
-        $updateTable = Validator::make($request->all(), [
-            'first' => 'required|max:50',
-            'last' => 'required|max:50',
-            'phone' => 'required|unique:customers|max:11',
-            'id' => 'required|integer',
-        ]);
-
         switch($type){
             case 'customer':
-                return $getCustomer;
+                return Validator::make($request->all(), [
+                    'first' => 'required|max:50',
+                    'last' => 'required|max:50',
+                    'phone' => 'required|unique:customers|max:11',
+                ]);
             case 'id':
-                return $getID;
+                return Validator::make($request->all(), [
+                    'id' => 'required|integer',
+                ]);
             case 'updates':
-                return $updateTable;
+                return Validator::make($request->all(), [
+                    'first' => 'required|max:50',
+                    'last' => 'required|max:50',
+                    'phone' => 'required|unique:customers|max:11',
+                    'id' => 'required|integer',
+                ]);
         }
-
-
     }
+    private function validationCheck($validation){
+        if ($validation->fails()) {
+            return response()->json([
+                "type" => "Error",
+                "message" => "Validation failed",
+                "errors" => $validation->errors(),
+            ], 422);
+        }
+    }
+
 
 }
