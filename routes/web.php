@@ -18,7 +18,7 @@ use Illuminate\Http\Request;
 Route::group(['prefix'=>'customers'], function(){
     Route::post('/create-new', [UserController::class, 'store']);
     Route::put('/update', [UserController::class, 'update']);
-    Route::delete('/delete', [UserController::class, 'delete']);
+    Route::delete('/delete', [UserController::class, 'destroy']);
     Route::get('/show-id', [UserController::class, 'show']);
     Route::get('/show-all', [UserController::class, 'showall']);
 });
