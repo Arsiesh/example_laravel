@@ -55,10 +55,12 @@ class UserController extends Controller
     }
 
 
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        
-        $validation = $this->validateCustomer($request, 'update');
+        $id = $request->input("id");
+        $validation = $this->validateCustomer($request, 'updates');
+        $user = Customer::findOrFail($id);
+
 
         if ($validation->fails()) {
             return response()->json([
@@ -68,14 +70,25 @@ class UserController extends Controller
             ], 422);
         }
 
-        $user = Customer::findOrFail($id);
         $user->update([
-            "first"=> $request->first,
-            "last"=> $request->last,
-            "phone"=> $request->phone,
+            "first" => $request->input("first"),
+            "last" => $request->input("last"),
+            "phone" => $request->input("phone"),
         ]);
 
         $user->save();
+
+        if (!$user) {
+            return response()->json([
+                "type" => "Error",
+                "message" => "Failed to update user",
+            ], 500);
+        }
+
+        return response()->json([
+            "type" => "Success",
+            "message" => "User Updated Successfully",
+        ], 200);
     }
 
     public function destroy(Request $request){
@@ -142,7 +155,7 @@ class UserController extends Controller
                 return $getCustomer;
             case 'id':
                 return $getID;
-            case 'update':
+            case 'updates':
                 return $updateTable;
         }
 
